@@ -1,29 +1,7 @@
-from flask import Flask
 from flask import Flask,render_template,url_for,request
 import pandas as pd 
-import pickle
-from sklearn.feature_extraction.text import CountVectorizer
-from sklearn.naive_bayes import MultinomialNB
-import joblib
-
-import numpy as np # linear algebra
-import glob
-import time
-import pandas as pd
-# from xml.dom import minidom
-from nltk import ngrams
-from nltk.tokenize import sent_tokenize
-import nltk
-#uncomment below lines if gotten error
-# nltk.download('punkt')
-# nltk.download('stopwords')
-# nltk.download('wordnet')
-from nltk.stem import PorterStemmer
-from nltk.stem import PorterStemmer
-from nltk.tokenize import sent_tokenize, word_tokenize
-from nltk.stem import WordNetLemmatizer
+import numpy as np
 from nltk.corpus import stopwords 
-from nltk.tokenize import word_tokenize
 
 app = Flask(__name__)
 
@@ -57,9 +35,10 @@ def predict():
     print(classification_report(y_test,y_pred))
 
     if request.method == 'POST':
-        message = request.form['message']
-        data = [message]
-        vect = vectorizer.transform(data).toarray()
-        my_prediction = clf.predict(vect)
+        # message = request.form['message']
+        print(request,request.form.to_dict())
+        # data = [message]
+        # vect = vectorizer.transform(data).toarray()
+        # my_prediction = clf.predict(vect)
 		
     return render_template('result.html',prediction = my_prediction)
