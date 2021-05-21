@@ -1,9 +1,15 @@
-from flask import Flask,render_template,url_for,request
 import pandas as pd 
 import numpy as np
-from nltk.corpus import stopwords 
+import pickle
+import json
+from keras.models import load_model
+from nltk.corpus import stopwords
+from flask import Flask,render_template,url_for,request, Response
+from flask_cors import CORS, cross_origin
+from sklearn.feature_extraction.text import CountVectorizer
 
 app = Flask(__name__)
+CORS(app)
 
 @app.route("/")
 def home():
@@ -11,34 +17,53 @@ def home():
 
 @app.route("/predict",methods=['POST'])
 def predict():
+    data = request.json
+    username = [data['username']]
+    password = [data['password']]
+    
+    #LOGISTIC REGRESSION MODEL USED
+    infile = open('logistic_reg_model','rb')
+    mymodel = pickle.load(infile)
+
     df = pd.read_csv("sqli.csv",encoding='utf-16')
-
-    from sklearn.feature_extraction.text import CountVectorizer
     vectorizer = CountVectorizer( min_df=2, max_df=0.7, stop_words=stopwords.words('english'))
-    posts = vectorizer.fit_transform(df['Sentence'].values.astype('U')).toarray()
+    vectorizer.fit_transform(df['Sentence'].values.astype('U')).toarray()
 
-    transformed_posts=pd.DataFrame(posts)
-    df=pd.concat([df,transformed_posts],axis=1)
-    print(df.columns)
-    X=df[df.columns[2:]]
-    y=df['Label']
 
-    from sklearn.model_selection import train_test_split
-    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+    #USERNAME
+    user_vect = vectorizer.transform(username).toarray()
+    user_pred = mymodel.predict(user_vect)
 
-    #logistic regression
-    from sklearn.linear_model import LogisticRegression
-    clf = LogisticRegression(random_state=0).fit(X_train, y_train)
+    # username_isSQLi says if username has an sql injection or not
+    username_isSQLi = True
+    if user_pred[0]==0:
+        username_isSQLi= False
+    else:
+        username_isSQLi= True
 
-    from sklearn.metrics import accuracy_score, classification_report
-    y_pred=clf.predict(X_test)
-    print(classification_report(y_test,y_pred))
+    #PASSWORD
+    password_vect = vectorizer.transform(password).toarray()
+    password_pred = mymodel.predict(password_vect)
+    # password_isSQLi says if password has an sql injection or not
+    password_isSQLi = True
+    if password_pred[0]==0:
+        password_isSQLi= False
+    else:
+        password_isSQLi= True
 
-    if request.method == 'POST':
-        # message = request.form['message']
-        print(request,request.form.to_dict())
-        # data = [message]
-        # vect = vectorizer.transform(data).toarray()
-        # my_prediction = clf.predict(vect)
-		
-    return render_template('result.html',prediction = my_prediction)
+    #DATA OBJECT FOR THE RESPONSE
+    data = {'field'  : 'None','sqli' : True }
+    if username_isSQLi == True and password_isSQLi==True:
+        data['field'] = 'Username and Password'
+        data['sqli'] = True
+    elif username_isSQLi == True:
+        data['field'] = 'Username'
+    elif password_isSQLi == True:
+        data['field'] = 'Password'
+    else:
+        data['field'] = 'None'
+        data['sqli'] = False
+
+    js = json.dumps(data)
+    response = Response(js, status=200, mimetype='application/json')
+    return response
