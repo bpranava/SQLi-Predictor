@@ -8,6 +8,9 @@ from flask import Flask,render_template,url_for,request, Response
 from flask_cors import CORS, cross_origin
 from sklearn.feature_extraction.text import CountVectorizer
 
+import warnings
+warnings.filterwarnings("ignore")
+
 app = Flask(__name__)
 CORS(app)
 
@@ -22,7 +25,8 @@ def predict():
     password = [data['password']]
     
     #LOGISTIC REGRESSION MODEL USED
-    infile = open('logistic_reg_model','rb')
+   
+    infile = open('models/ensemble_model','rb')
     mymodel = pickle.load(infile)
 
     df = pd.read_csv("sqli.csv",encoding='utf-16')
