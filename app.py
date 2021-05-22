@@ -26,7 +26,7 @@ def predict():
     
     #LOGISTIC REGRESSION MODEL USED
    
-    infile = open('models/ensemble_model','rb')
+    infile = open('models/logistic_reg_model','rb')
     mymodel = pickle.load(infile)
 
     df = pd.read_csv("sqli.csv",encoding='utf-16')
@@ -37,6 +37,7 @@ def predict():
     #USERNAME
     user_vect = vectorizer.transform(username).toarray()
     user_pred = mymodel.predict(user_vect)
+    print("USERNAME FIELD SQLi: ",user_pred)
 
     # username_isSQLi says if username has an sql injection or not
     username_isSQLi = True
@@ -48,6 +49,7 @@ def predict():
     #PASSWORD
     password_vect = vectorizer.transform(password).toarray()
     password_pred = mymodel.predict(password_vect)
+    print("PASSWORD FIELD SQLi: ",password_pred)
     # password_isSQLi says if password has an sql injection or not
     password_isSQLi = True
     if password_pred[0]==0:
@@ -68,6 +70,7 @@ def predict():
         data['field'] = 'None'
         data['sqli'] = False
 
+    
     js = json.dumps(data)
     response = Response(js, status=200, mimetype='application/json')
     return response

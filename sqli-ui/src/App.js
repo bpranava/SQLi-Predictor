@@ -1,12 +1,16 @@
 import React from "react";
-import { Card, Tabs } from "antd";
+import { Card, Tabs, Menu, Divider, Layout } from "antd";
 import LoginForm from "./login-form";
 import SignupForm from "./signup-form";
 import "./App.css";
+import ListBody from "antd/lib/transfer/ListBody";
+import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
+import Welcome from "./welcome"
 
 const { TabPane } = Tabs;
+const { Header } = Layout;
 
-function App() {
+function Demo() {
   function callback(key) {
     console.log(key);
   }
@@ -15,7 +19,7 @@ function App() {
     <header className="App-header">
       <Card
         title="Sign Up"
-        style={{ width: "20rem", height: "31rem" }}
+        style={{ width: "20rem", height: "31rem" },{float: 'center'}}
         headStyle={{
           backgroundColor: "lightgray",
           display: "flex",
@@ -33,7 +37,29 @@ function App() {
           </TabPane>
         </Tabs>
       </Card>
-    </header>
+
+     </header>
+  );
+}
+
+function App() {
+  function callback(key) {
+    console.log(key);
+  }
+
+  return (
+    <div class="body">
+      
+     <Router>
+       <Switch>
+       <Route path='/' exact component = {Demo} />
+       <Route path='/welcome' component={Welcome} />
+      </Switch>
+     </Router>
+
+     </div>
+
+
   );
 }
 
