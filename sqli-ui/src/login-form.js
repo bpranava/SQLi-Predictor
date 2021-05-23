@@ -3,8 +3,11 @@ import { Form, Input, Button, Checkbox, notification } from "antd";
 import { UserOutlined, LockOutlined } from "@ant-design/icons";
 import axios from "axios";
 import { REQUEST_URL } from "./lib/constants";
+import { useHistory } from "react-router-dom";
 
 function LoginForm() {
+  const history = useHistory();
+
   const onFinish = async (values) => {
     const result = await axios
       .post(REQUEST_URL.PREDICT, values)
@@ -31,6 +34,7 @@ function LoginForm() {
           description: "SQLi Detector",
           duration: 3,
         });
+        history.push('/welcome')
       }
     }
   };
@@ -57,7 +61,7 @@ function LoginForm() {
         name="password"
         rules={[{ required: true, message: "Please input your Password!" }]}
       >
-        <Input
+        <Input.Password
           prefix={<LockOutlined className="site-form-item-icon" />}
           type="password"
           placeholder="Password"

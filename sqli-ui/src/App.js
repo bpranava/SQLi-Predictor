@@ -16,10 +16,11 @@ function Demo() {
   }
 
   return (
+    <React.Fragment>
     <header className="App-header">
       <Card
-        title="Sign Up"
-        style={{ width: "20rem", height: "31rem" },{float: 'center'}}
+        title="SQLi Detector"
+        style={{ width: "20rem", height: "31rem" }}
         headStyle={{
           backgroundColor: "lightgray",
           display: "flex",
@@ -27,7 +28,7 @@ function Demo() {
           minHeight: "6rem",
           fontSize: "1.5rem",
         }}
-      >
+      >  
         <Tabs size="default" defaultActiveKey="1" onChange={callback}>
           <TabPane tab="Login" key="1">
             <LoginForm />
@@ -39,6 +40,7 @@ function Demo() {
       </Card>
 
      </header>
+     </React.Fragment>
   );
 }
 
@@ -49,7 +51,7 @@ function App() {
 
   return (
     <div class="body">
-      
+
      <Router>
        <Switch>
        <Route path='/' exact component = {Demo} />
