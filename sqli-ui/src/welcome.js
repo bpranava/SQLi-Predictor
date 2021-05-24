@@ -4,7 +4,7 @@ import TopBar from "./top-bar";
 import { Avatar } from "antd";
 import pranava from "./static/img/1.jpg";
 import sudarshan from "./static/img/2.jpg";
-import logo from "./static/img/log.png";
+import logo from "./static/img/circle.png";
 import "./App.css";
 
 function Welcome() {
@@ -31,7 +31,7 @@ function Welcome() {
         >
           <Avatar
             size={200}
-            src={<Image src={logo} style={{ paddingTop: "2rem" }} />}
+            src={<Image src={logo} preview={false} style={{ paddingTop: "2rem" }} />}
           />
         </Col>
         <Col
@@ -105,7 +105,7 @@ function Welcome() {
                     justifyContent: "center",
                   }}
                 >
-                  <Avatar size={100} src={<Image src={pranava} />} />
+                  <Avatar size={100} src={<Image preview={false} src={pranava} />} />
                 </span>
               </Col>
               <Col
@@ -148,7 +148,7 @@ function Welcome() {
                     justifyContent: "center",
                   }}
                 >
-                  <Avatar size={100} src={<Image src={sudarshan} />} />
+                  <Avatar size={100} src={<Image preview={false} src={sudarshan} />} />
                 </span>
               </Col>
               <Col
